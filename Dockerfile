@@ -1,0 +1,13 @@
+# docker build -t lksg-tool-irs:0.0.1-SNAPSHOT .
+
+FROM eclipse-temurin:18.0.1_10-jre-alpine
+
+VOLUME /tmp
+
+ARG JAR_FILE=target/*.jar
+
+COPY ${JAR_FILE} lksg-tool-irs.jar
+
+EXPOSE 9999
+
+ENTRYPOINT ["java", "-Dspring.profiles.active=local","-jar","/lksg-tool-irs.jar"]

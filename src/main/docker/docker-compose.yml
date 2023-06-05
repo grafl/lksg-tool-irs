@@ -1,0 +1,65 @@
+# docker-compose --file docker-compose.yml up -d
+# ----------------------------------------------------------------------------
+#   Ports:
+#     PostgreSQL           5432
+#     pgadmin              5050
+#     Backend              8080
+# ----------------------------------------------------------------------------
+version: '3.8'
+name: lksg-tool-irs-local
+
+services:
+  # ------------------------------------------------------------------------------
+  lksg-tool-irs-postgres:
+    container_name: lksg-tool-irs-postgres
+    image: postgres:14.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-docker}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - lksg-tool-irs-postgres_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    ports:
+      - "${PG_PORT:-5432}:5432"
+    networks:
+      - lksg-tool-irs-localnet
+    restart: unless-stopped
+  # ------------------------------------------------------------------------------
+  lksg-tool-irs-pgadmin:
+    container_name: lksg-tool-irs-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - lksg-tool-irs-pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - lksg-tool-irs-localnet
+    restart: unless-stopped
+    depends_on:
+      - lksg-tool-irs-postgres
+  # ------------------------------------------------------------------------------
+  lksg-tool-irs-minio:
+    image: minio/minio
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    #env_file: /var/data/config/minio/minio.env
+    #volumes:
+      #- lksg-tool-irs-minio_data:/data
+    networks:
+      - lksg-tool-irs-localnet
+    command:  minio server /data --console-address ":9001"
+
+networks:
+  lksg-tool-irs-localnet:
+    driver: bridge
+
+volumes:
+  lksg-tool-irs-postgres_data:
+  lksg-tool-irs-pgadmin_data:
+  lksg-tool-irs-minio_data:
