@@ -1,0 +1,5 @@
+apiVersion: v2
+description: lksg-tool-irs chart
+name: lksg-tool
+version: 12.5.5
+appVersion: "7.0"

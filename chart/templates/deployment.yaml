@@ -1,0 +1,35 @@
+{{- $chartName := .Chart.Name }}
+{{- $fullName := include "lksg-tool-irs.fullname" . }}
+{{- $nameSpace := .Values.lksg_tool_irs.namespace }}
+{{- $labels := include "lksg-tool-irs.labels" .}}
+{{- $selectorLabels := include "lksg-tool-irs.selectorLabels" . }}
+
+{{- range $app_name, $app := .Values.lksg_tool_irs.apps }}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ $fullName }}-{{ $app_name }}-deployment
+  namespace: {{ $nameSpace }}
+  labels:
+    {{- $labels | nindent 4 }}
+spec:
+  replicas: 1
+  hostname: lksg-tool-{{ $app_name }}
+  selector:
+    matchLabels:
+      {{- $selectorLabels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- $selectorLabels | nindent 8 }}
+    spec:
+      containers:
+        {{- if or (hasPrefix "irs" $app_name) }}
+        - name: lksg-tool-{{ $app_name }}
+          image: lksg-tool-{{ $app_name }}:{{ $app.tag }}
+          ports:
+            - containerPort: {{ $app.targetPort }}
+              protocol: TCP
+        {{- end }}
+{{- end }}

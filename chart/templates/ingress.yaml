@@ -1,0 +1,29 @@
+{{- $chartName := .Chart.Name }}
+{{- $fullName := include "lksg-tool-irs.fullname" . }}
+{{- $ingressPathType := $.Values.lksg_tool_irs.ingress.ingressPathType  }}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "lksg-tool-irs.fullname" . }}-ingress
+  namespace: {{ .Values.lksg_tool_irs.namespace }}
+  labels:
+    {{- include "lksg-tool-irs.labels" . | nindent 4 }}
+    application-base: {{ include "lksg-tool-irs.fullname" . }}-base
+    application-backend: {{ include "lksg-tool-irs.fullname" . }}-backend
+    application-irs: {{ include "lksg-tool-irs.fullname" . }}-irs
+    application-frontend: {{ include "lksg-tool-irs.fullname" . }}-frontend
+spec:
+  ingressClassName: {{ .Values.lksg_tool_irs.ingress.className }}
+  rules:
+    - host: {{ .Values.lksg_tool_irs.ingress.hostName }}
+      http:
+        paths:
+          {{- range $app_name, $app := .Values.lksg_tool_irs.apps }}
+          - path: {{ $app.path }}
+            pathType: {{ $ingressPathType }}
+            backend:
+              service:
+                name: {{ $fullName }}-{{ $app_name }}-service
+                port:
+                  number: {{ $app.targetPort }}
+          {{- end }}
