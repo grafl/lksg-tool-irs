@@ -13,7 +13,7 @@
 
     <groupId>grafl.msg</groupId>
     <artifactId>lksg-tool-irs</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>lksg-tool-irs</name>
     <description>lksg-tool-irs</description>

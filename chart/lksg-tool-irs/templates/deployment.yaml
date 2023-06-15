@@ -3,7 +3,7 @@
 {{- $nameSpace := .Values.lksg_tool_irs.namespace }}
 {{- $labels := include "lksg-tool-irs.labels" .}}
 {{- $selectorLabels := include "lksg-tool-irs.selectorLabels" . }}
-
+{{- $imagePullSecrets := .Values.lksg_tool_irs.imagePullSecrets }}
 {{- range $app_name, $app := .Values.lksg_tool_irs.apps }}
 ---
 kind: Deployment
@@ -15,7 +15,6 @@ metadata:
     {{- $labels | nindent 4 }}
 spec:
   replicas: 1
-  hostname: lksg-tool-{{ $app_name }}
   selector:
     matchLabels:
       {{- $selectorLabels | nindent 6 }}
@@ -25,11 +24,15 @@ spec:
         {{- $selectorLabels | nindent 8 }}
     spec:
       containers:
-        {{- if or (hasPrefix "irs" $app_name) }}
-        - name: lksg-tool-{{ $app_name }}
-          image: lksg-tool-{{ $app_name }}:{{ $app.tag }}
-          ports:
-            - containerPort: {{ $app.targetPort }}
-              protocol: TCP
-        {{- end }}
+      {{- if or (hasPrefix "irs" $app_name) }}
+      - name: lksg-tool-{{ $app_name }}
+        image: {{ $app.image }}:{{ $app.tag }}
+        ports:
+          - containerPort: {{ $app.targetPort }}
+            protocol: TCP
+      {{- if $imagePullSecrets }}
+      imagePullSecrets:
+      - name: {{ $imagePullSecrets }}
+      {{- end -}}
+      {{- end }}
 {{- end }}

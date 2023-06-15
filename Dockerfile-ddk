@@ -1,0 +1,13 @@
+# docker build -f Dockerfile-aks-gx4fm -t aks-gx4fm/lksg-tool-irs:latest .
+
+FROM eclipse-temurin:18.0.1_10-jre-alpine
+
+VOLUME /tmp
+
+ARG JAR_FILE=target/*.jar
+
+COPY ${JAR_FILE} lksg-tool-irs.jar
+
+EXPOSE 9999
+
+ENTRYPOINT ["java", "-Dspring.profiles.active=ddk","-jar","/lksg-tool-irs.jar"]

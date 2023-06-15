@@ -10,4 +10,4 @@ COPY ${JAR_FILE} lksg-tool-irs.jar
 
 EXPOSE 9999
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=local","-jar","/lksg-tool-irs.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=aks-gx4fm","-jar","/lksg-tool-irs.jar"]

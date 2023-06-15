@@ -1,0 +1,22 @@
+nameOverride: ""
+fullnameOverride: ""
+
+lksg_tool_irs:
+  namespace: lksg-tool
+  imagePullSecrets: lksg-tool-docker-secrets
+  service:
+    type: ClusterIP
+    protocol: TCP
+  ingress:
+    enabled: true
+    ingressPathType: Prefix
+    className: nginx
+    hostName: lksg.tool.irs.gxfs.gx4fm.org
+    port: 80
+  apps:
+    irs:
+      image: grafl/lksg-tool-irs
+      tag: latest
+      path: /
+      port: 9999
+      targetPort: 9999

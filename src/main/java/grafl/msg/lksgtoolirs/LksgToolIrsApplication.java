@@ -18,7 +18,7 @@ public class LksgToolIrsApplication {
     @GetMapping(value = "/")
     public String root_context() {
         log.info("root_context()");
-        return "Ready";
+        return "The LSKG-Tool IRS mock is ready\n";
     }
 
 }

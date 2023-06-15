@@ -3,6 +3,7 @@ fullnameOverride: ""
 
 lksg_tool_irs:
   namespace: lksg-tool
+
   service:
     type: ClusterIP
     protocol: TCP
@@ -15,7 +16,7 @@ lksg_tool_irs:
   apps:
     irs:
       image: lksg-tool-irs
-      tag: 0.0.1-SNAPSHOT
+      tag: 1.0.0-SNAPSHOT
       path: /
       port: 9999
       targetPort: 9999

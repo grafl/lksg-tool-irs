@@ -1,0 +1,22 @@
+nameOverride: ""
+fullnameOverride: ""
+
+lksg_tool_irs:
+  namespace: lksg-tool
+
+  service:
+    type: ClusterIP
+    protocol: TCP
+  ingress:
+    enabled: true
+    ingressPathType: Prefix
+    className: nginx
+    hostName: lksg.tool.irs.localdev.me
+    port: 80
+  apps:
+    irs:
+      image: lksg-tool-irs
+      tag: 0.0.1-SNAPSHOT
+      path: /
+      port: 9999
+      targetPort: 9999
