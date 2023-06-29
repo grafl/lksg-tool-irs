@@ -23,7 +23,7 @@ spec:
             pathType: {{ $ingressPathType }}
             backend:
               service:
-                name: {{ $fullName }}-{{ $app_name }}-service
+                name: {{ $fullName }}-service
                 port:
                   number: {{ $app.targetPort }}
           {{- end }}

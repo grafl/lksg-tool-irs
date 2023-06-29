@@ -15,8 +15,8 @@ lksg_tool_irs:
     port: 80
   apps:
     irs:
-      image: lksg-tool-irs
-      tag: 1.0.0-SNAPSHOT
+      image: grafl/lksg-tool-irs
+      tag: latest
       path: /
       port: 9999
       targetPort: 9999
